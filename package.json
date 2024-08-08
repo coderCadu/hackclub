@@ -11,14 +11,13 @@
     "lint:fix": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prepare": "husky install",
-    "pre-push": "npm run down && npm run lint:check && npm run test"
+    "prepare": "husky install"
   },
   "author": "coderCadu",
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-push": "echo \"[Husky] pre-push\""
+      "pre-push": "npm run down && npm run lint:check && npm run test"
     }
   },
   "dependencies": {
