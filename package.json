@@ -4,9 +4,9 @@
   "description": "Implementation for curso.dev",
   "main": "index.js",
   "scripts": {
-    "dev": "docker compose -f infra/compose.yaml up -d && next dev",
-    "up": "docker compose -f infra/compose.yaml up -d",
-    "down": "docker compose -f infra/compose.yaml down",
+    "dev": "npm run compose:up && next dev",
+    "compose:up": "docker compose -f infra/compose.yaml up -d",
+    "compose:down": "docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "test": "jest",
@@ -17,7 +17,7 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run down && npm run lint:check && npm run test"
+      "pre-commit": "npm run compose:down && npm run lint:check && npm run test"
     }
   },
   "dependencies": {
