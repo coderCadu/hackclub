@@ -1,9 +1,8 @@
-import database from "infra/database";
-
 async function apiStatus(req, res) {
-  const result = await database.query("SELECT 1 + 1 as sum");
-  console.log(result.rows[0].sum);
-  res.status(200).json({ status: "ok" });
+  const updatedAt = new Date().toISOString();
+  res.status(200).json({
+    updated_at: updatedAt,
+  });
 }
 
 export default apiStatus;
