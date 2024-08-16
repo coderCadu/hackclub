@@ -1,4 +1,4 @@
-const { Client, Pool } = require("pg");
+const { Client } = require("pg");
 
 async function query(queryObject) {
   let result;
@@ -11,9 +11,6 @@ async function query(queryObject) {
     database: process.env.POSTGRES_DB || "hackclub",
   });
 
-  const pool = new Pool({
-    max: 20,
-  });
   try {
     await client.connect();
     result = await client.query(queryObject);
@@ -25,6 +22,22 @@ async function query(queryObject) {
   }
 }
 
+async function databaseStatus() {
+  const maxConnectionsResult = await this.query("SHOW max_connections;");
+  const maxConnections = maxConnectionsResult.rows[0].max_connections;
+
+  const openedCoonectionsResult = await this.query(
+    "SELECT count(*)::int FROM pg_stat_activity WHERE datname = 'hackclub';",
+  );
+  const openedCoonections = openedCoonectionsResult.rows[0].count;
+
+  const databaseVersionResult = await this.query("SHOW server_version;");
+  const databaseVersion = databaseVersionResult.rows[0].server_version;
+
+  return { maxConnections, openedCoonections, databaseVersion };
+}
+
 export default {
   query,
+  databaseStatus,
 };
