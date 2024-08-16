@@ -26,8 +26,9 @@ async function databaseStatus() {
   const maxConnectionsResult = await this.query("SHOW max_connections;");
   const maxConnections = maxConnectionsResult.rows[0].max_connections;
 
+  const databaseName = process.env.POSTGRES_DB || 'hackclub';
   const openedCoonectionsResult = await this.query(
-    "SELECT count(*)::int FROM pg_stat_activity WHERE datname = 'hackclub';",
+    `SELECT count(*)::int FROM pg_stat_activity WHERE datname = '${databaseName}';`,
   );
   const openedCoonections = openedCoonectionsResult.rows[0].count;
 
