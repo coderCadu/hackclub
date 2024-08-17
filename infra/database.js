@@ -1,5 +1,7 @@
 const { Client } = require("pg");
 
+// TODO: Remove repeated access to env variables
+
 async function query(queryObject) {
   let result;
 
@@ -15,7 +17,7 @@ async function query(queryObject) {
     await client.connect();
     result = await client.query(queryObject);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   } finally {
     await client.end();
     return result;
@@ -26,10 +28,11 @@ async function databaseStatus() {
   const maxConnectionsResult = await this.query("SHOW max_connections;");
   const maxConnections = maxConnectionsResult.rows[0].max_connections;
 
-  const databaseName = process.env.POSTGRES_DB || 'hackclub';
-  const openedCoonectionsResult = await this.query(
-    `SELECT count(*)::int FROM pg_stat_activity WHERE datname = '${databaseName}';`,
-  );
+  const databaseName = process.env.POSTGRES_DB || "hackclub";
+  const openedCoonectionsResult = await this.query({
+    text: `SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;`,
+    values: [databaseName],
+  });
   const openedCoonections = openedCoonectionsResult.rows[0].count;
 
   const databaseVersionResult = await this.query("SHOW server_version;");
