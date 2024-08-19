@@ -11,6 +11,8 @@ async function query(queryObject) {
     host: process.env.POSTGRES_HOST || "localhost",
     port: process.env.POSTGRES_PORT || 5432,
     database: process.env.POSTGRES_DB || "hackclub",
+    // ssl: process.env.NODE_ENV === "development" ? false : true,
+    ssl: true,
   });
 
   try {
@@ -18,6 +20,7 @@ async function query(queryObject) {
     result = await client.query(queryObject);
   } catch (error) {
     console.error(error);
+    throw error;
   } finally {
     await client.end();
     return result;
