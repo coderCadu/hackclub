@@ -11,9 +11,10 @@ async function query(queryObject) {
     host: process.env.POSTGRES_HOST || "localhost",
     port: process.env.POSTGRES_PORT || 5432,
     database: process.env.POSTGRES_DB || "hackclub",
-    // ssl: process.env.NODE_ENV === "development" ? false : true,
-    ssl: true,
+    ssl: process.env.NODE_ENV === "development" ? false : true,
   });
+
+  console.log(process.env.NODE_ENV);
 
   try {
     await client.connect();
