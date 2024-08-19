@@ -11,10 +11,8 @@ async function query(queryObject) {
     host: process.env.POSTGRES_HOST || "localhost",
     port: process.env.POSTGRES_PORT || 5432,
     database: process.env.POSTGRES_DB || "hackclub",
-    ssl: process.env.NODE_ENV === "development" ? false : true,
+    ssl: getSSLValues(),
   });
-
-  console.log(process.env.NODE_ENV);
 
   try {
     await client.connect();
@@ -43,6 +41,16 @@ async function databaseStatus() {
   const databaseVersion = databaseVersionResult.rows[0].server_version;
 
   return { maxConnections, openedCoonections, databaseVersion };
+}
+
+function getSSLValues() {
+  if (process.env.POSTGRES_CA) {
+    return {
+      ca: process.env.POSTGRES_CA,
+    };
+  }
+
+  return process.env.NODE_ENV === "development" ? false : true;
 }
 
 export default {
