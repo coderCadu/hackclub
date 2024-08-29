@@ -1,4 +1,4 @@
-describe("api/v1/status", () => {
+describe("GET /api/v1/status", () => {
   describe("When test the success of apiStatus method", () => {
     let response;
     let responseBody;
