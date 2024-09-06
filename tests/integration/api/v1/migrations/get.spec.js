@@ -1,7 +1,17 @@
+import database from "infra/database";
+
+async function clearDatabase() {
+  return database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
+}
+
 describe("GET /api/v1/migrations", () => {
   describe("When test the success of apiStatus method", () => {
     let response;
     let responseBody;
+
+    beforeAll(async () => {
+      await clearDatabase();
+    });
 
     beforeEach(async () => {
       jest.clearAllMocks();
@@ -24,7 +34,11 @@ describe("GET /api/v1/migrations", () => {
     describe("Should verify returned array", () => {
       it("And GET to /api/v1/migrations should return an array", async () => {
         expect(Array.isArray(responseBody)).toBe(true);
-      })
+      });
+
+      it("And GET to /api/v1/migrations should return an array with migrations", async () => {
+        expect(responseBody.length).toBeGreaterThan(0);
+      });
     });
   });
 });
