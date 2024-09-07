@@ -2,7 +2,21 @@ const { Client } = require("pg");
 
 async function query(queryObject) {
   let result;
+  let client;
 
+  try {
+    client = await getNewClient();
+    result = await client.query(queryObject);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await client.end();
+    return result;
+  }
+}
+
+async function getNewClient() {
   const defaultDatabaseVariables = {
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
@@ -13,17 +27,8 @@ async function query(queryObject) {
   };
 
   const client = new Client(defaultDatabaseVariables);
-
-  try {
-    await client.connect();
-    result = await client.query(queryObject);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  } finally {
-    await client.end();
-    return result;
-  }
+  await client.connect();
+  return client;
 }
 
 async function databaseStatus() {
@@ -56,4 +61,5 @@ function getSSLValues() {
 export default {
   query,
   databaseStatus,
+  getNewClient,
 };
