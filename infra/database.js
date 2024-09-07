@@ -1,18 +1,18 @@
 const { Client } = require("pg");
 
-// TODO: Remove repeated access to env variables
-
 async function query(queryObject) {
   let result;
 
-  const client = new Client({
+  const defaultDatabaseVariables = {
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
     database: process.env.POSTGRES_DB,
     ssl: getSSLValues(),
-  });
+  };
+
+  const client = new Client(defaultDatabaseVariables);
 
   try {
     await client.connect();
