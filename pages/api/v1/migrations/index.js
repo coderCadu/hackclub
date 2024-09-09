@@ -28,5 +28,10 @@ export default async function migrations(req, res) {
     return res.status(200).json(migrations);
   }
 
+  const allowedMethod = ["GET", "POST"];
+  if (!allowedMethod.contains(req.method)) {
+    return res.status(405).send("Method Not Allowed");
+  }
+
   return res.status(405).end();
 }
