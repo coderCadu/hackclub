@@ -1,4 +1,10 @@
+import orchestrator from "tests/orchestrator.js";
+
 describe("GET /api/v1/status", () => {
+  beforeAll(async () => {
+    await orchestrator.waitForAllServices();
+  });
+
   describe("When test the success of apiStatus method", () => {
     let response;
     let responseBody;

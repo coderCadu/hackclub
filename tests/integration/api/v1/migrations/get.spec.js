@@ -1,4 +1,5 @@
 import database from "infra/database";
+import orchestrator from "tests/orchestrator.js";
 
 async function clearDatabase() {
   return database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
@@ -10,6 +11,7 @@ describe("GET /api/v1/migrations", () => {
     let responseBody;
 
     beforeAll(async () => {
+      await orchestrator.waitForAllServices();
       await clearDatabase();
     });
 
