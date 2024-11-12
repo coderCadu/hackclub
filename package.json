@@ -8,8 +8,8 @@
     "compose:up": "docker compose -f infra/compose.yaml up -d",
     "compose:stop": "docker compose -f infra/compose.yaml stop",
     "compose:down": "docker compose -f infra/compose.yaml down",
-    "lint:check": "prettier --check .",
-    "lint:fix": "prettier --write .",
+    "lint:prettier:check": "prettier --check .",
+    "lint:prettier:fix": "prettier --write .",
     "test": "npm run compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
     "test:watch": "npm run compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --watchAll --runInBand\"",
     "migration:create": "node-pg-migrate -m infra/migrations create",
@@ -22,7 +22,7 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run compose:down && npm run lint:check && npm run test"
+      "pre-commit": "npm run compose:down && npm run lint:prettier:check && npm run test"
     }
   },
   "dependencies": {
