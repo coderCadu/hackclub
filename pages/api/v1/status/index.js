@@ -1,7 +1,8 @@
 import database from "infra/database";
 
 async function apiStatus(req, res) {
-  const { maxConnections, openedCoonections, databaseVersion } = await database.databaseStatus();
+  const { maxConnections, openedCoonections, databaseVersion } =
+    await database.databaseStatus();
 
   const updatedAt = new Date().toISOString();
 
