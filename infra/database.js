@@ -12,6 +12,7 @@ async function query(queryObject) {
     throw error;
   } finally {
     await client.end();
+    // eslint-disable-next-line no-unsafe-finally
     return result;
   }
 }
@@ -58,8 +59,10 @@ function getSSLValues() {
   return process.env.NODE_ENV === "production" ? true : false;
 }
 
-export default {
+const database = {
   query,
   databaseStatus,
   getNewClient,
 };
+
+export default database;
