@@ -1,18 +1,13 @@
-import database from "infra/database";
 import orchestrator from "tests/orchestrator.js";
 
-async function clearDatabase() {
-  return database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
-}
-
 describe("GET /api/v1/migrations", () => {
-  describe("When test the success of apiStatus method", () => {
+  describe("When apiStatus method return success", () => {
     let response;
     let responseBody;
 
     beforeAll(async () => {
       await orchestrator.waitForAllServices();
-      await clearDatabase();
+      await orchestrator.clearDatabaseService();
     });
 
     beforeEach(async () => {
@@ -21,24 +16,24 @@ describe("GET /api/v1/migrations", () => {
       responseBody = await response.json([]);
     });
 
-    describe("Should return 200", () => {
-      it("And GET to /api/v1/migrations should return 200", async () => {
+    describe("Should return success", () => {
+      it("And GET to /api/v1/migrations should return success", async () => {
         expect(response.status).toBe(200);
       });
     });
 
-    describe("Should have responseBody", () => {
+    describe("Should have existing body", () => {
       it("And GET to /api/v1/migrations should return be defined", async () => {
         expect(responseBody).toBeDefined();
       });
     });
 
-    describe("Should verify returned array", () => {
+    describe("Should verify if an array is returned", () => {
       it("And GET to /api/v1/migrations should return an array", async () => {
         expect(Array.isArray(responseBody)).toBe(true);
       });
 
-      it("And GET to /api/v1/migrations should return an array with migrations", async () => {
+      it("And GET to /api/v1/migrations should return an array with migrations data", async () => {
         expect(responseBody.length).toBeGreaterThan(0);
       });
     });
