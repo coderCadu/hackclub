@@ -4,29 +4,27 @@
   "description": "Implementation for curso.dev",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run compose:up && npm run migration:up && next dev",
-    "compose:up": "docker compose -f infra/compose.yaml up -d",
-    "compose:stop": "docker compose -f infra/compose.yaml stop",
-    "compose:down": "docker compose -f infra/compose.yaml down",
+    "dev": "npm run services:compose:up && npm run db:migrations:up && next dev",
+    "postdev": "npm run services:compose:stop",
+    "test": "npm run services:compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand --verbose\"",
+    "posttest": "npm run services:compose:stop",
+    "test:watch": "npm run db:migrations:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --watchAll --runInBand --verbose\"",
+    "posttest:watch": "npm run services:compose:stop",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
     "lint:eslint:check": "next lint --dir .",
-    "test": "npm run compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
-    "test:watch": "npm run compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --watchAll --runInBand\"",
-    "migration:create": "node-pg-migrate -m infra/migrations create",
-    "migration:up": "npm run wait-for-postgres && node-pg-migrate -m infra/migrations --envPath .env.development up",
-    "migration:down": "node-pg-migrate -m infra/migrations --envPath .env.development down",
-    "wait-for-postgres": "node infra/scripts/wait-for-db.js",
+    "services:compose:up": "docker compose -f infra/compose.yaml up -d",
+    "services:compose:stop": "docker compose -f infra/compose.yaml stop",
+    "services:compose:down": "docker compose -f infra/compose.yaml down",
+    "services:wait:database": "node infra/scripts/wait-for-db.js",
+    "db:migrations:create": "node-pg-migrate -m infra/migrations create",
+    "db:migrations:up": "npm run services:wait:database && node-pg-migrate -m infra/migrations --envPath .env.development up",
+    "db:migrations:down": "node-pg-migrate -m infra/migrations --envPath .env.development down",
     "prepare": "husky",
     "commit": "cz"
   },
   "author": "coderCadu",
   "license": "MIT",
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run compose:down && npm run lint:prettier:check && npm run test"
-    }
-  },
   "dependencies": {
     "async-retry": "1.3.3",
     "dotenv": "16.4.5",

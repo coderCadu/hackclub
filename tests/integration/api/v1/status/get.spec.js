@@ -5,7 +5,7 @@ describe("GET /api/v1/status", () => {
     await orchestrator.waitForAllServices();
   });
 
-  describe("When test the success of apiStatus method", () => {
+  describe("When apiStatus received a success status code", () => {
     let response;
     let responseBody;
 
@@ -15,13 +15,13 @@ describe("GET /api/v1/status", () => {
       responseBody = await response.json();
     });
 
-    describe("Should return 200", () => {
-      it("And GET to /api/v1/status should return 200", async () => {
+    describe("Should return success", () => {
+      it("And GET to /api/v1/status should return success", async () => {
         expect(response.status).toBe(200);
       });
     });
 
-    describe("Should have responseBody", () => {
+    describe("Should have existing a body", () => {
       it("And GET to /api/v1/status should return be defined", async () => {
         expect(responseBody).toBeDefined();
       });

@@ -1,43 +1,41 @@
-import database from "infra/database";
 import orchestrator from "tests/orchestrator.js";
 
-async function clearDatabase() {
-  return database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
-}
+describe("When test apiStatus features", () => {
+  beforeAll(async () => {
+    await orchestrator.waitForAllServices();
+  });
 
-describe("POST /api/v1/migrations", () => {
-  describe("When test the success of apiStatus method with created status", () => {
+  describe("When apiStatus method return created status code", () => {
     let response;
     let responseBody;
 
     beforeEach(async () => {
-      await orchestrator.waitForAllServices();
-      await clearDatabase();
+      await orchestrator.clearDatabaseService();
       response = await fetch("http://localhost:3000/api/v1/migrations", {
         method: "POST",
       });
       responseBody = await response.json([]);
     });
 
-    describe("Should return 200", () => {
-      it("And POST to /api/v1/migrations should return 201", async () => {
+    describe("Should return created", () => {
+      it("And POST to /api/v1/migrations should return created status", async () => {
         expect(response.status).toBe(201);
       });
     });
 
-    describe("Should have responseBody", () => {
-      it("And POST to /api/v1/migrations should return be defined", async () => {
+    describe("Should have content in body response", () => {
+      it("And POST to /api/v1/migrations should return has a body", async () => {
         expect(responseBody).toBeDefined();
       });
     });
 
-    describe("Should verify returned array", () => {
-      it("And POST to /api/v1/migrations should return an array", async () => {
+    describe("Should verify if has returned an array", () => {
+      it("And POST to /api/v1/migrations should return an array exists in response", async () => {
         expect(Array.isArray(responseBody)).toBe(true);
       });
     });
 
-    describe("Should verify returned object with specific properties", () => {
+    describe("Should verify returned object has path, name and timestamp properties", () => {
       it("And POST to /api/v1/migrations should return an object with his propertys path, name and timestamp", async () => {
         expect(Object.keys(responseBody[0])).toStrictEqual([
           "path",
@@ -48,7 +46,7 @@ describe("POST /api/v1/migrations", () => {
     });
   });
 
-  describe("When test the success of apiStatus method with OK status", () => {
+  describe("When apiStatus method return success status code", () => {
     let response;
     let responseBody;
 
@@ -59,25 +57,25 @@ describe("POST /api/v1/migrations", () => {
       responseBody = await response.json([]);
     });
 
-    describe("Should return 200", () => {
-      it("And POST to /api/v1/migrations should return 200", async () => {
+    describe("Should return success", () => {
+      it("And POST to /api/v1/migrations should return success", async () => {
         expect(response.status).toBe(200);
       });
     });
 
-    describe("Should have responseBody", () => {
+    describe("Should have a body in response", () => {
       it("And POST to /api/v1/migrations should return be defined", async () => {
         expect(responseBody).toBeDefined();
       });
     });
 
-    describe("Should verify returned array", () => {
+    describe("Should verify returned array existance", () => {
       it("And POST to /api/v1/migrations should return an array", async () => {
         expect(Array.isArray(responseBody)).toBe(true);
       });
     });
 
-    describe("Should verify the array length", () => {
+    describe("Should verify the array length equal 0", () => {
       it("And POST to /api/v1/migrations should return an array with length 0", async () => {
         expect(responseBody.length).toBe(0);
       });
