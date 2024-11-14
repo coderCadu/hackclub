@@ -13,6 +13,7 @@
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
     "lint:eslint:check": "next lint --dir .",
+    "lint:secretlint:check": "secretlint --maskSecrets .",
     "services:compose:up": "docker compose -f infra/compose.yaml up -d",
     "services:compose:stop": "docker compose -f infra/compose.yaml stop",
     "services:compose:down": "docker compose -f infra/compose.yaml down",

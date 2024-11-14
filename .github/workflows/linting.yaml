@@ -56,4 +56,4 @@ jobs:
 
       - run: npm ci
 
-      - run: npx secretlint "**/*"
+      - run: npm run lint:secretlint:check
