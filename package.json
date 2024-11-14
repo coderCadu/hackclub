@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "npm run services:compose:up && npm run db:migrations:up && next dev",
     "postdev": "npm run services:compose:stop",
-    "test": "npm run services:compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
+    "test": "npm run services:compose:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand --verbose\"",
     "posttest": "npm run services:compose:stop",
-    "test:watch": "npm run db:migrations:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --watchAll --runInBand\"",
+    "test:watch": "npm run db:migrations:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --watchAll --runInBand --verbose\"",
     "posttest:watch": "npm run services:compose:stop",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
