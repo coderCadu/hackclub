@@ -1,6 +1,7 @@
 import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database.js";
+import { DatabaseMigrationError } from "infra/errors.js";
 
 export default async function migrations(req, res) {
   const allowedMethod = ["GET", "POST"];
@@ -33,9 +34,12 @@ export default async function migrations(req, res) {
       return res.status(200).json(migrations);
     }
   } catch (error) {
-    console.error(error);
-    throw error;
+    const publicErrorObject = new DatabaseMigrationError({
+      cause: error,
+    });
+
+    res.status(publicErrorObject.statusCode).json(publicErrorObject);
   } finally {
-    await client.end();
+    await client?.end();
   }
 }
