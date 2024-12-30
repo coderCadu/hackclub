@@ -11,7 +11,7 @@ async function query(queryObject) {
     console.error(error);
     throw error;
   } finally {
-    await client.end();
+    await client?.end();
     // eslint-disable-next-line no-unsafe-finally
     return result;
   }
@@ -34,17 +34,17 @@ async function getNewClient() {
 
 async function databaseStatus() {
   const maxConnectionsResult = await this.query("SHOW max_connections;");
-  const maxConnections = maxConnectionsResult.rows[0].max_connections;
+  const maxConnections = maxConnectionsResult?.rows[0].max_connections;
 
   const databaseName = process.env.POSTGRES_DB;
   const openedCoonectionsResult = await this.query({
     text: `SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;`,
     values: [databaseName],
   });
-  const openedCoonections = openedCoonectionsResult.rows[0].count;
+  const openedCoonections = openedCoonectionsResult?.rows[0].count;
 
   const databaseVersionResult = await this.query("SHOW server_version;");
-  const databaseVersion = databaseVersionResult.rows[0].server_version;
+  const databaseVersion = databaseVersionResult?.rows[0].server_version;
 
   return { maxConnections, openedCoonections, databaseVersion };
 }
