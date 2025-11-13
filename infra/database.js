@@ -1,4 +1,5 @@
 const { Client } = require("pg");
+import { ServiceError } from "./errors.js";
 
 async function query(queryObject) {
   let result;
@@ -8,8 +9,11 @@ async function query(queryObject) {
     client = await getNewClient();
     result = await client.query(queryObject);
   } catch (error) {
-    console.error(error);
-    throw error;
+    const serviceError = new ServiceError({
+      cause: error,
+      message: "An error occurred while querying the database",
+    });
+    throw serviceError;
   } finally {
     await client?.end();
     // eslint-disable-next-line no-unsafe-finally
@@ -37,16 +41,16 @@ async function databaseStatus() {
   const maxConnections = maxConnectionsResult?.rows[0].max_connections;
 
   const databaseName = process.env.POSTGRES_DB;
-  const openedCoonectionsResult = await this.query({
+  const openedConnectionsResult = await this.query({
     text: `SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;`,
     values: [databaseName],
   });
-  const openedCoonections = openedCoonectionsResult?.rows[0].count;
+  const openedConnections = openedConnectionsResult?.rows[0].count;
 
   const databaseVersionResult = await this.query("SHOW server_version;");
   const databaseVersion = databaseVersionResult?.rows[0].server_version;
 
-  return { maxConnections, openedCoonections, databaseVersion };
+  return { maxConnections, openedConnections, databaseVersion };
 }
 
 function getSSLValues() {
