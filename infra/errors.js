@@ -4,7 +4,7 @@ export class DatabaseConnectionError extends Error {
     this.name = "Database Error";
     this.message = "An error occurred while trying to connect to the database";
     this.action = "Drink some Coffee or Tea and try again later";
-    this.statusCode = "500";
+    this.statusCode = 500;
   }
 
   toJSON() {
@@ -23,7 +23,7 @@ export class DatabaseMigrationError extends Error {
     this.name = "Migration Error";
     this.message = "An error occurred when trying run migrations";
     this.action = "Please message the support team";
-    this.statusCode = "500";
+    this.statusCode = 500;
   }
 
   toJSON() {
@@ -42,7 +42,7 @@ export class GenericError extends Error {
     this.name = "Generic Error";
     this.message = "An error occurred";
     this.action = "Please message the support team and try again later";
-    this.statusCode = "500";
+    this.statusCode = 500;
   }
 
   toJSON() {
@@ -56,11 +56,47 @@ export class GenericError extends Error {
 }
 
 export class InternalServerError extends Error {
-  constructor({ cause }) {
+  constructor({ cause, statusCode }) {
     super("An error occurred", { cause });
     this.name = "Internal Server Error";
     this.action = "Please message the support team";
-    this.statusCode = "500";
+    this.statusCode = statusCode || 500;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class ServiceError extends Error {
+  constructor({ cause, message }) {
+    super(message || "Service Offline In The Moment", { cause });
+    this.name = "Service Error";
+    this.action = "Verify if the service is online or message the support team";
+    this.statusCode = 503;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class MethodNotAllowedError extends Error {
+  constructor() {
+    super("An internal error occurred");
+    this.name = "Method Not Allowed";
+    this.action = "Please send requests using allowed methods";
+    this.statusCode = 405;
   }
 
   toJSON() {
